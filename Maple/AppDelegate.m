@@ -2,8 +2,8 @@
 //  sp_AppDelegate.m
 //  Maple
 //
-//  Created by 01HW604371 on 12/19/14.
-//  Copyright (c) 2014 01HW604371. All rights reserved.
+//  Created by Supratim on 12/19/14.
+//  Copyright (c) 2014 Supratim. All rights reserved.
 //
 
 #import "AppDelegate.h"

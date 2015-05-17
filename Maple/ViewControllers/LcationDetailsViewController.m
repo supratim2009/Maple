@@ -2,8 +2,8 @@
 //  LcationDetailsViewController.m
 //  Maple
 //
-//  Created by Fake Client on 17/05/15.
-//  Copyright (c) 2015 01HW604371. All rights reserved.
+//  Created by Supratim on 17/05/15.
+//  Copyright (c) 2015 Supratim. All rights reserved.
 //
 
 #import "LcationDetailsViewController.h"
