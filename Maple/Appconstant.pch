@@ -1,0 +1,15 @@
+//
+//  Appconstant.pch
+//  Maple
+//
+//  Created by Fake Client on 17/05/15.
+//  Copyright (c) 2015 01HW604371. All rights reserved.
+//
+
+#ifndef Maple_Appconstant_pch
+#define Maple_Appconstant_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif

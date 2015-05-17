@@ -8,13 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
-
+#import "MapView.h"
 #import "sp_Annotation.h"
 #import "sp_SearchPopOverViewController.h"
 #import "sp_RouteFinderViewController.h"
 
-@interface sp_ViewController : UIViewController <MKAnnotation,MKMapViewDelegate,MKOverlay,UIActionSheetDelegate,UIAlertViewDelegate,RouteFinderPopUpDelegate,SearchLocationProtocol,UINavigationControllerDelegate>
-@property (weak, nonatomic) IBOutlet MKMapView *mapVeiw;
+@class LcationDetailsViewController;
+
+@interface sp_ViewController : UIViewController <MKAnnotation,MKMapViewDelegate,MKOverlay,UIActionSheetDelegate,UIAlertViewDelegate,RouteFinderPopUpDelegate,SearchLocationProtocol,UINavigationControllerDelegate,UIPopoverControllerDelegate,MapViewTouchActionProtocol>
+@property (weak, nonatomic) IBOutlet MapView *mapVeiw;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *actionButton;
 
 - (IBAction)segmentValueChanged:(UISegmentedControl *)sender;

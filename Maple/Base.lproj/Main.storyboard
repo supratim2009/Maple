@@ -23,7 +23,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CYh-hl-PUc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3065" y="-564"/>
+            <point key="canvasLocation" x="-3029" y="-1546"/>
         </scene>
         <!--Search in Map-->
         <scene sceneID="7QW-5M-ONM">
@@ -134,7 +134,80 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0BD-Mx-nKb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="249" y="-740"/>
+            <point key="canvasLocation" x="311" y="-664"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="2EH-Mg-JrB">
+            <objects>
+                <navigationController storyboardIdentifier="LOCATIONDETAILSCALLOUTVIEWCONTROLLER" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cHg-Tb-evo" sceneMemberID="viewController">
+                    <value key="contentSizeForViewInPopover" type="size" width="320" height="240"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="240"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="KPD-0r-MHu">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="tTp-eZ-5te" kind="relationship" relationship="rootViewController" id="JDL-nl-jVn"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jfU-7q-6NW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2121" y="-695"/>
+        </scene>
+        <!--Details Of The Location-->
+        <scene sceneID="5JO-Gb-LqL">
+            <objects>
+                <viewController id="tTp-eZ-5te" customClass="LcationDetailsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="0Fn-t5-bVQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="x1T-30-kso"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="m4T-K5-d85">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="eYC-jU-032">
+                                <rect key="frame" x="142" y="101" width="37" height="37"/>
+                                <color key="color" red="0.13547565335150336" green="0.087326594744864802" blue="0.66875424592391308" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Ps-6X-uP0">
+                                <rect key="frame" x="0.0" y="44" width="320" height="155"/>
+                                <inset key="scrollIndicatorInsets" minX="0.0" minY="0.0" maxX="5" maxY="0.0"/>
+                            </scrollView>
+                            <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hUb-V8-K6P">
+                                <rect key="frame" x="0.0" y="201" width="320" height="39"/>
+                                <color key="backgroundColor" red="1" green="0.872489903714597" blue="0.89499905045627604" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Place a Pin on the Map">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="btnPlaceMarkerTapped:" destination="tTp-eZ-5te" eventType="touchUpInside" id="eVW-2i-oah"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Details Of The Location" id="a8O-fm-aRL">
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="q2s-x8-xwN">
+                            <connections>
+                                <action selector="donebtnTapped:" destination="tTp-eZ-5te" id="fni-E6-0Jy"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="indicatorView" destination="eYC-jU-032" id="dJu-1W-qFB"/>
+                        <outlet property="scrollView" destination="4Ps-6X-uP0" id="MBW-Tr-3GG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pby-6U-Mbl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1571" y="-695"/>
         </scene>
         <!--MapVC-->
         <scene sceneID="tne-QT-ifu">
@@ -148,9 +221,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YXk-km-Msd">
-                                <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
-                            </mapView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="bordered" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hIM-3H-16U">
                                 <rect key="frame" x="810" y="720" width="209" height="29"/>
                                 <segments>
@@ -162,6 +232,9 @@
                                     <action selector="segmentValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="qUE-Hy-mVU"/>
                                 </connections>
                             </segmentedControl>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YXk-km-Msd" customClass="MapView">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -188,11 +261,12 @@
                     <connections>
                         <outlet property="actionButton" destination="JjG-Yh-whw" id="9eA-lw-jMj"/>
                         <outlet property="mapVeiw" destination="YXk-km-Msd" id="0gl-Z6-3ja"/>
+                        <segue destination="cHg-Tb-evo" kind="custom" identifier="Seg1" id="PrE-ld-7BI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1637" y="-614"/>
+            <point key="canvasLocation" x="-1821" y="-1558"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="j7a-88-moa">
@@ -299,7 +373,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <activityIndicatorView opaque="NO" userInteractionEnabled="NO" tag="120" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ssv-t8-tIm">
-                                <rect key="frame" x="146" y="178" width="20" height="20"/>
+                                <rect key="frame" x="150" y="178" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -324,7 +398,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QIF-ei-X8w" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="646" y="-1221"/>
+            <point key="canvasLocation" x="766" y="-1221"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

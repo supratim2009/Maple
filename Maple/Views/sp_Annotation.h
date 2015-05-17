@@ -8,9 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <MapKit/MKAnnotation.h>
+#import <MapKit/MKPlacemark.h>
 
-@interface sp_Annotation : NSObject <MKAnnotation>
-@property (nonatomic,assign) CLLocationCoordinate2D coordinate;
-@property (nonatomic,strong) NSString *shortDescription;
-@property (nonatomic,strong) NSString *name;
+@interface sp_Annotation : MKPlacemark
 @end

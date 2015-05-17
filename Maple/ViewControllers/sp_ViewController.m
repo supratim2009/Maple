@@ -8,8 +8,9 @@
 
 #import "sp_ViewController.h"
 #import "sp_AnnotationView.h"
+#import "LcationDetailsViewController.h"
 
-@interface sp_ViewController ()
+@interface sp_ViewController () <MapViewDetailsDelegate>
 {
 	CLLocationManager *locationManager;
 	
@@ -17,14 +18,16 @@
 	NSMutableArray* annotations;
 	__block MKDirectionsResponse *result;
 	__block NSError *err;
-	UIActionSheet *actionSheet;
-	BOOL isRecordingUserMovement;
+	__block BOOL isRecordingUserMovement;
 	NSMutableArray *pathColorSet;
 	NSMutableArray *instructionSet;
 	NSMutableString *gpxFinalString;
 	__block double **arrDist;
 	BOOL isDragging;
+	BOOL isSelectingAnnotationView;
 	UIStoryboardPopoverSegue *popOverSegue;
+	UIPopoverController *mapDetailCallOutPopOver;
+	
 }
 @end
 
@@ -46,6 +49,10 @@ static int pathNo=0;
 	self.mapVeiw.showsUserLocation=YES;
 	self.mapVeiw.delegate = self;
 	self.mapVeiw.userTrackingMode = MKUserTrackingModeFollowWithHeading;
+	self.mapVeiw.exclusiveTouch = YES;
+//	UILongPressGestureRecognizer *longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self.mapVeiw action:@selector(longPressed:)];
+//	[self.mapVeiw addGestureRecognizer:longPressGestureRecogniser];
+	self.mapVeiw.touchDelegate = self;
 
 	NSArray* arrLocationList = @[@"14.622485,120.961231",@"14.617739,120.970256",@"14.614685,120.991388",@"14.603539,120.96753",
 								 @"14.60056,120.985026",@"14.600252,120.985229",@"14.601628,120.982326",@"14.602294,120.982446",
@@ -57,24 +64,40 @@ static int pathNo=0;
 								 @"14.606106,120.98812",@"14.603539,120.96753",@"14.603437,120.967569",@"14.603516,120.965901",
 								 @"14.604363,120.967079",@"14.635969,120.967085",@"14.622733,120.961034",@"14.622485,120.961231"
 								 ];
-
-				
 	 annotations = [NSMutableArray new];
 	
 	for (NSString* location in arrLocationList) {
 		CLLocationCoordinate2D loc = CLLocationCoordinate2DMake([[location componentsSeparatedByString:@","][0] doubleValue], [[location componentsSeparatedByString:@","][1] doubleValue]);
-		sp_Annotation *locAnnotate = [sp_Annotation new];
-		locAnnotate.coordinate = loc;
+		sp_Annotation *locAnnotate = [[sp_Annotation alloc] initWithCoordinate:loc addressDictionary:nil];
 		[annotations addObject:locAnnotate];
 	}
 	[self.mapVeiw showAnnotations:annotations animated:YES];
 	
-	actionSheet = [[UIActionSheet alloc] initWithTitle:@"Do More" delegate:self cancelButtonTitle:Nil destructiveButtonTitle:Nil otherButtonTitles:@"Take Snapshot",@"Record Map in Background",nil];
+//	actionSheet = [[UIActionSheet alloc] initWithTitle:@"Do More" delegate:self cancelButtonTitle:Nil destructiveButtonTitle:Nil otherButtonTitles:@@"Take Snapshot",@"Record Map in Background",nil];
+	
+	
 	
 	locationManager = [[CLLocationManager alloc] init];
 	[locationManager requestAlwaysAuthorization];
 	
     
+}
+
+-(UIAlertController*) getAlertController {
+	UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"Do More With Maps" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	UIAlertAction *action = [UIAlertAction actionWithTitle:@"Take Snapshot" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		[self performSelectorInBackground:@selector(makeSnapShot) withObject:nil];
+	}];
+	[actionSheet addAction:action];
+	action = nil;
+	
+	action = [UIAlertAction actionWithTitle:(!isRecordingUserMovement)?@"Start Tracking User Movement":@"Stop Tracking User Movement" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		isRecordingUserMovement = !isRecordingUserMovement;
+	}];
+	[actionSheet addAction:action];
+	action = nil;
+	
+	return actionSheet;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -117,7 +140,6 @@ static int pathNo=0;
 }
 - (IBAction)setMyLocation:(id)sender {
 	[locationManager startUpdatingLocation];
-	
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
@@ -131,41 +153,32 @@ static int pathNo=0;
 	return defaultView;
 }
 
-
-
-
-
-- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
-	NSLog(@"Did select:%@",view);
-	NSLog(@"Self.view=%@",self.view);
-     if([[((UINavigationController*)popOverSegue.popoverController.contentViewController) topViewController] isKindOfClass:[sp_RouteFinderViewController class]]) {
-		NSLog(@"Did select:%@",view);
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"MapViewControllerDidSelectedMapPoint" object:Nil];
-		
-        if ([popOverSegue.destinationViewController isKindOfClass:[UINavigationController class]]) {
-             CLLocation *location= [[CLLocation alloc] initWithLatitude:view.annotation.coordinate.latitude longitude:view.annotation.coordinate.longitude];
-            if ([view.annotation isKindOfClass:[sp_Annotation class]]) {
-               
-                NSString *locName=((sp_Annotation*)view.annotation).shortDescription;
-                if (locName) {
-                    
-                    ((sp_RouteFinderViewController*)((UINavigationController*)popOverSegue.destinationViewController).visibleViewController).onReceiveLocation(@{LOCATION:location,MESSAGE:locName});
-                    return;
-                }
-            } else if ([view.annotation isKindOfClass:[MKUserLocation class]]) {
-                NSString *locName=((MKUserLocation*)view.annotation).title;
-                if (locName) {
-                    ((sp_RouteFinderViewController*)((UINavigationController*)popOverSegue.destinationViewController).visibleViewController).onReceiveLocation(@{LOCATION:location,MESSAGE:locName});
-                    return;
-                }
-            }
-            
-        }
-        
-    }
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
 	
-	[self.mapVeiw resignFirstResponder];
-	[self.view resignFirstResponder];
+}
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+	isSelectingAnnotationView = YES;
+	if (!popOverSegue.popoverController) {
+	UIStoryboard *st = [UIStoryboard storyboardWithName:[[NSBundle mainBundle].infoDictionary objectForKey:@"UIMainStoryboardFile"] bundle:[NSBundle mainBundle]];
+	UINavigationController *navigationController = [st instantiateViewControllerWithIdentifier:@"LOCATIONDETAILSCALLOUTVIEWCONTROLLER"];
+	((LcationDetailsViewController*) navigationController.viewControllers[0]).delegate = self;
+	((LcationDetailsViewController*) navigationController.viewControllers[0]).selectedPlace = ((sp_Annotation*)view.annotation);
+	mapDetailCallOutPopOver = [[UIPopoverController alloc] initWithContentViewController:navigationController];
+		mapDetailCallOutPopOver.delegate = self;
+	[mapDetailCallOutPopOver presentPopoverFromRect:CGRectMake(view.frame.origin.x, view.frame.origin.y, 1, 1) inView:mapView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+	} else if([[((UINavigationController*)popOverSegue.popoverController.contentViewController) topViewController] isKindOfClass:[sp_RouteFinderViewController class]]){
+		CLPlacemark *placemark=((sp_Annotation*)view.annotation);
+		NSMutableString *msg = [NSMutableString new];
+		[msg appendString:(placemark.name)?placemark.name:@""];
+		[msg appendString:(placemark.locality)?placemark.locality:@""];
+		[msg appendString:(placemark.ISOcountryCode)?placemark.ISOcountryCode:@""];
+		[msg appendString:(placemark.postalCode)?placemark.postalCode:@""];
+		if ([msg isEqualToString:@""]) {
+			[msg appendString:[NSString stringWithFormat:@"%lf,%lf",((sp_Annotation*)view.annotation).location.coordinate.latitude, ((sp_Annotation*)view.annotation).location.coordinate.longitude]];
+		}
+		((sp_RouteFinderViewController*)((UINavigationController*)popOverSegue.destinationViewController).visibleViewController).onReceiveLocation(@{LOCATION:placemark.location,MESSAGE:msg, @"PlaceMark":placemark});
+		
+	}
 	
 }
 
@@ -215,7 +228,9 @@ static int pathNo=0;
 
 - (IBAction)showActionViewOnTap:(UIBarButtonItem *)sender {
 	
-	[actionSheet showFromBarButtonItem:sender animated:YES];
+//	[actionSheet showFromBarButtonItem:sender animated:YES];
+	UIPopoverController *popover= [[UIPopoverController alloc] initWithContentViewController:[self getAlertController]];
+	[popover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 	
 }
 
@@ -223,42 +238,57 @@ static int pathNo=0;
 	[self performSegueWithIdentifier:@"SEARCHSEGUEID" sender:self];
 	
 }
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-	NSLog(@"Touch Began");
-	for (UITouch *t in touches) {
-		NSLog(@"view:%@",t.view);
+
+
+
+
+-(void) showDetailsOfLocation:(CLLocation *)location AtPoint:(CGPoint)point {
+	if (!isSelectingAnnotationView || popOverSegue.popoverController) {
+		if([[((UINavigationController*)popOverSegue.popoverController.contentViewController) topViewController] isKindOfClass:[sp_RouteFinderViewController class]]){
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"MapViewControllerDidSelectedMapPoint" object:Nil];
+		} else {
+			[self createAnnnotationDetailsViewPopoverAtPoint:point];
+		}
+		CLGeocoder *geoCoder=[[CLGeocoder alloc] init];
+		[geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+			NSString *msg;
+			
+			
+			if([[((UINavigationController*)popOverSegue.popoverController.contentViewController) topViewController] isKindOfClass:[sp_RouteFinderViewController class]]){
+				if (!error) {
+					CLPlacemark *placemark=placemarks[0];
+					msg = [NSString stringWithFormat:@"%@,%@,%@,%@",placemark.name,placemark.locality,placemark.ISOcountryCode,placemark.postalCode];
+					
+				}
+				else {
+					msg = [NSString stringWithFormat:@"%lf,%lf",location.coordinate.latitude,location.coordinate.longitude];
+				}
+				((sp_RouteFinderViewController*)((UINavigationController*)popOverSegue.destinationViewController).visibleViewController).onReceiveLocation(@{LOCATION:location,MESSAGE:msg, @"PlaceMark":placemarks});
+			}
+			else {
+				if (!error) {
+					[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+					[((LcationDetailsViewController*)((UINavigationController*)self.presentedViewController).topViewController) updateUIWithPlaceMark:placemarks[0]];
+					}];
+				}
+				
+			}
+		}];
 	}
 	
 }
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+
+-(void) createAnnnotationDetailsViewPopoverAtPoint:(CGPoint) point {
+	UIStoryboard *st = [UIStoryboard storyboardWithName:[[NSBundle mainBundle].infoDictionary objectForKey:@"UIMainStoryboardFile"] bundle:[NSBundle mainBundle]];
+	UINavigationController *navigationController = [st instantiateViewControllerWithIdentifier:@"LOCATIONDETAILSCALLOUTVIEWCONTROLLER"];
+	((LcationDetailsViewController*) navigationController.viewControllers[0]).delegate = self;
 	
+	mapDetailCallOutPopOver = [[UIPopoverController alloc] initWithContentViewController:navigationController];
+	mapDetailCallOutPopOver.delegate = self;
+	[mapDetailCallOutPopOver presentPopoverFromRect:CGRectMake(point.x, point.y, 1, 1) inView:self.mapVeiw permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	[super touchesEnded:touches withEvent:event];
-	NSLog(@"touches end");
-	if([[((UINavigationController*)popOverSegue.popoverController.contentViewController) topViewController] isKindOfClass:[sp_RouteFinderViewController class]]){
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"MapViewControllerDidSelectedMapPoint" object:Nil];
-        CGPoint touchPoint = [((UITouch*)[touches anyObject]) locationInView:self.mapVeiw];
-        NSLog(@"X:%f,Y:%f",touchPoint.x,touchPoint.y);
-        CLLocationCoordinate2D coordinateAtPoint = [self.mapVeiw convertPoint:touchPoint toCoordinateFromView:self.mapVeiw];
-        CLLocation *location= [[CLLocation alloc] initWithLatitude:coordinateAtPoint.latitude longitude:coordinateAtPoint.longitude];
-        CLGeocoder *geoCoder=[[CLGeocoder alloc] init];
-        
-        __block NSString *msg;
-        [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-            if (!error) {
-                CLPlacemark *placemark=placemarks[0];
-                msg = [NSString stringWithFormat:@"%@,%@,%@,%@",placemark.name,placemark.locality,placemark.ISOcountryCode,placemark.postalCode];
-                ((sp_RouteFinderViewController*)((UINavigationController*)popOverSegue.destinationViewController).visibleViewController).onReceiveLocation(@{LOCATION:location,MESSAGE:msg});
-            }
-            else {
-                msg = [NSString stringWithFormat:@"%lf,%lf",location.coordinate.latitude,location.coordinate.longitude];
-                ((sp_RouteFinderViewController*)((UINavigationController*)popOverSegue.destinationViewController).visibleViewController).onReceiveLocation(@{LOCATION:location,MESSAGE:msg});
-            }
-        }];
-    }
-			 
-}
+
+
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
 	
@@ -323,12 +353,17 @@ static int pathNo=0;
 	searchRequest.region  =[self getRegionFromScopeIndex:scope];
 	MKLocalSearch *localSearch= [[MKLocalSearch alloc] initWithRequest:searchRequest];
 	[localSearch startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error){
-		
-			[[NSNotificationCenter defaultCenter] postNotificationName:MAPVIEWDIDFINDLOCATION object:self userInfo:@{MAPVIEWDIDFINDLOCATION:response.mapItems}];
-		
-		
+		if (!error) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:MAPVIEWDIDFINDLOCATION object:self userInfo:@{MAPVIEWDIDFINDLOCATION:(response.mapItems)?response.mapItems:@[]}];
+		}
 	}];
 	return nil;
+}
+
+-(void) placeAnnotationAtLocation:(CLPlacemark *)place {
+	sp_Annotation *annotation = [[sp_Annotation alloc] initWithCoordinate:place.location.coordinate addressDictionary:place.addressDictionary];
+	[self.mapVeiw addAnnotation:annotation];
+	
 }
 
 -(void) makeSnapShot {
@@ -345,6 +380,15 @@ static int pathNo=0;
 	
 }
 
+- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController {
+	isSelectingAnnotationView = NO;
+	for (sp_Annotation *annotation in [self.mapVeiw selectedAnnotations]) {
+		[self.mapVeiw deselectAnnotation:annotation animated:YES];
+	}
+	mapDetailCallOutPopOver=nil;
+	return YES;
+}
+
 -(void) recordMap {
 	
 }
@@ -358,14 +402,37 @@ static int pathNo=0;
 }
 
 -(void) dismissPopOver {
-	[popOverSegue.popoverController dismissPopoverAnimated:YES];
-	popOverSegue=Nil;
+	isSelectingAnnotationView = NO;
+	if (popOverSegue) {
+		[popOverSegue.popoverController dismissPopoverAnimated:YES];
+		popOverSegue=Nil;
+	} else {
+		for (sp_Annotation *annotation in [self.mapVeiw selectedAnnotations]) {
+			[self.mapVeiw deselectAnnotation:annotation animated:YES];
+		}
+		[mapDetailCallOutPopOver dismissPopoverAnimated:YES];
+		mapDetailCallOutPopOver=nil;
+		
+	}
+	
 }
 
 -(void) createPDF {
 	
 }
 
+//-(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+//	UITouch *touch = (UITouch*)[touches anyObject];
+//	
+////	if (![touch.view isKindOfClass:[sp_AnnotationView class]]) {
+//		CGPoint touchPoint = [((UITouch*)[touches anyObject]) locationInView:self.view];
+//		NSLog(@"X:%f,Y:%f",touchPoint.x,touchPoint.y);
+//		CLLocationCoordinate2D coordinateAtPoint = [self.mapVeiw convertPoint:touchPoint toCoordinateFromView:self.mapVeiw];
+//		CLLocation *location= [[CLLocation alloc] initWithLatitude:coordinateAtPoint.latitude longitude:coordinateAtPoint.longitude];
+//		[self showDetailsOfLocation:location AtPoint:touchPoint];
+////	}
+//	
+//}
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	switch (buttonIndex) {

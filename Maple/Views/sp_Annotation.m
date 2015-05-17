@@ -10,4 +10,11 @@
 
 @implementation sp_Annotation
 
+-(id) initWithCoordinate:(CLLocationCoordinate2D)coordinate addressDictionary:(NSDictionary *)addressDictionary {
+		self =[super initWithCoordinate:coordinate addressDictionary:addressDictionary];
+		if (self) {
+			
+		}
+		return self;
+}
 @end

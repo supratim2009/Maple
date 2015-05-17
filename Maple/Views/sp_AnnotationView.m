@@ -13,9 +13,16 @@
 	self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
 	if (self) {
 		self.image= [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"marker" ofType:@"png"]];
-		
 		self.draggable=NO;
-		self.exclusiveTouch=YES;
+//		self.canShowCallout = YES;
+//		UIView * view1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30, 20)];
+//		view1.backgroundColor = [UIColor redColor];
+//		UIView * view2 = [[UIView alloc] initWithFrame:CGRectMake(70, 0, 30, 20)] ;
+//		view2.backgroundColor = [UIColor greenColor];
+//		self.leftCalloutAccessoryView = view1;
+//		self.rightCalloutAccessoryView = view2;
+		
+		
 	}
 	return self;
 }

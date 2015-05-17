@@ -27,6 +27,8 @@
 		1BCFE0571A8B726B0068D8BF /* sp_Annotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BCFE04E1A8B726B0068D8BF /* sp_Annotation.m */; };
 		1BCFE0581A8B726B0068D8BF /* sp_AnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BCFE0501A8B726B0068D8BF /* sp_AnnotationView.m */; };
 		1BCFE0591A8B726B0068D8BF /* sp_FrameView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BCFE0521A8B726B0068D8BF /* sp_FrameView.m */; };
+		D9B8779B1B07BD0000E1FB9E /* MapView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B8779A1B07BD0000E1FB9E /* MapView.m */; };
+		D9B8779E1B07E24200E1FB9E /* LcationDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B8779D1B07E24200E1FB9E /* LcationDetailsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +74,12 @@
 		1BCFE0501A8B726B0068D8BF /* sp_AnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sp_AnnotationView.m; sourceTree = "<group>"; };
 		1BCFE0511A8B726B0068D8BF /* sp_FrameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sp_FrameView.h; sourceTree = "<group>"; };
 		1BCFE0521A8B726B0068D8BF /* sp_FrameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sp_FrameView.m; sourceTree = "<group>"; };
+		D9B877981B07BB3000E1FB9E /* MKMapviewTouchDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKMapviewTouchDelegate.h; sourceTree = "<group>"; };
+		D9B877991B07BD0000E1FB9E /* MapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapView.h; sourceTree = "<group>"; };
+		D9B8779A1B07BD0000E1FB9E /* MapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapView.m; sourceTree = "<group>"; };
+		D9B8779C1B07E24200E1FB9E /* LcationDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LcationDetailsViewController.h; path = Maple/ViewControllers/LcationDetailsViewController.h; sourceTree = SOURCE_ROOT; };
+		D9B8779D1B07E24200E1FB9E /* LcationDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LcationDetailsViewController.m; path = Maple/ViewControllers/LcationDetailsViewController.m; sourceTree = SOURCE_ROOT; };
+		D9FB5FFC1B08585100F757C9 /* Appconstant.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Appconstant.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +146,7 @@
 			children = (
 				1BCFE0131A8B6FA00068D8BF /* Info.plist */,
 				1BCFE0141A8B6FA00068D8BF /* main.m */,
+				D9FB5FFC1B08585100F757C9 /* Appconstant.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -174,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				1BCFE0421A8B725F0068D8BF /* sp_PopOverProtocol.h */,
+				D9B877981B07BB3000E1FB9E /* MKMapviewTouchDelegate.h */,
 			);
 			name = Protocols;
 			path = Maple/Protocols;
@@ -182,6 +192,8 @@
 		1BCFE0431A8B726B0068D8BF /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				D9B8779C1B07E24200E1FB9E /* LcationDetailsViewController.h */,
+				D9B8779D1B07E24200E1FB9E /* LcationDetailsViewController.m */,
 				1BCFE0441A8B726B0068D8BF /* sp_MapSearchResultDetailsViewController.h */,
 				1BCFE0451A8B726B0068D8BF /* sp_MapSearchResultDetailsViewController.m */,
 				1BCFE0461A8B726B0068D8BF /* sp_RouteFinderViewController.h */,
@@ -204,6 +216,8 @@
 				1BCFE0501A8B726B0068D8BF /* sp_AnnotationView.m */,
 				1BCFE0511A8B726B0068D8BF /* sp_FrameView.h */,
 				1BCFE0521A8B726B0068D8BF /* sp_FrameView.m */,
+				D9B877991B07BD0000E1FB9E /* MapView.h */,
+				D9B8779A1B07BD0000E1FB9E /* MapView.m */,
 			);
 			name = Views;
 			path = Maple/Views;
@@ -313,8 +327,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9B8779E1B07E24200E1FB9E /* LcationDetailsViewController.m in Sources */,
 				1BCFE0181A8B6FA00068D8BF /* AppDelegate.m in Sources */,
 				1BCFE0561A8B726B0068D8BF /* sp_ViewController.m in Sources */,
+				D9B8779B1B07BD0000E1FB9E /* MapView.m in Sources */,
 				1BCFE0551A8B726B0068D8BF /* sp_SearchPopOverViewController.m in Sources */,
 				1BCFE0541A8B726B0068D8BF /* sp_RouteFinderViewController.m in Sources */,
 				1BCFE0571A8B726B0068D8BF /* sp_Annotation.m in Sources */,
@@ -450,6 +466,7 @@
 				INFOPLIST_FILE = Maple/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				nkjj = "";
 			};
 			name = Debug;
 		};
@@ -461,6 +478,7 @@
 				INFOPLIST_FILE = Maple/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				nkjj = "";
 			};
 			name = Release;
 		};
