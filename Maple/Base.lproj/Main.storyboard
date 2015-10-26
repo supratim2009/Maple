@@ -224,8 +224,8 @@
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="bordered" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hIM-3H-16U">
                                 <rect key="frame" x="810" y="720" width="209" height="29"/>
                                 <segments>
-                                    <segment title="Standard"/>
                                     <segment title="Satelite"/>
+                                    <segment title="Normal"/>
                                     <segment title="Hybrid"/>
                                 </segments>
                                 <connections>

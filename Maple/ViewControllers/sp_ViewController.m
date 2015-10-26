@@ -124,10 +124,10 @@ static int pathNo=0;
 
 - (IBAction)segmentValueChanged:(UISegmentedControl *)sender {
 	switch (sender.selectedSegmentIndex) {
-		case 0:
+		case 1:
 			self.mapVeiw.mapType = MKMapTypeStandard;
 			break;
-		case 1:
+		case 0:
 			self.mapVeiw.mapType = MKMapTypeSatellite;
 			break;
 		case 2:
