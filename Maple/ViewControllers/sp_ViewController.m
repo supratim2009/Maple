@@ -74,10 +74,6 @@ static int pathNo=0;
 	}
 	[self.mapVeiw showAnnotations:annotations animated:YES];
 	
-//	actionSheet = [[UIActionSheet alloc] initWithTitle:@"Do More" delegate:self cancelButtonTitle:Nil destructiveButtonTitle:Nil otherButtonTitles:@@"Take Snapshot",@"Record Map in Background",nil];
-	
-	
-	
 	locationManager = [[CLLocationManager alloc] init];
 	[locationManager requestAlwaysAuthorization];
 	
@@ -123,6 +119,8 @@ static int pathNo=0;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+// Change the map type when segmentedcontrol index changes
 
 - (IBAction)segmentValueChanged:(UISegmentedControl *)sender {
 	switch (sender.selectedSegmentIndex) {
