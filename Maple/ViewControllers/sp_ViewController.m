@@ -12,11 +12,11 @@
 
 @interface sp_ViewController () <MapViewDetailsDelegate>
 {
-	CLLocationManager *locationManager;
+	CLLocationManager *locationManager; // Corelocation Manager
 	
 	CLLocationCoordinate2D dragInitialCoordinate;
 	NSMutableArray* annotations;
-	__block MKDirectionsResponse *result;
+	__block MKDirectionsResponse *result; //
 	__block NSError *err;
 	__block BOOL isRecordingUserMovement;
 	NSMutableArray *pathColorSet;
@@ -34,6 +34,8 @@
 @implementation sp_ViewController
 @synthesize coordinate,boundingMapRect;
 static int pathNo=0;
+
+//Keep status bar hidden
 -(BOOL) prefersStatusBarHidden {
     return YES;
 }
@@ -46,14 +48,13 @@ static int pathNo=0;
 	// Do any additional setup after loading the view, typically from a nib.
 	//MKMapView
 	
+	//Setting up Mapview
 	self.mapVeiw.showsUserLocation=YES;
 	self.mapVeiw.delegate = self;
 	self.mapVeiw.userTrackingMode = MKUserTrackingModeFollowWithHeading;
 	self.mapVeiw.exclusiveTouch = YES;
-//	UILongPressGestureRecognizer *longPressGestureRecogniser = [[UILongPressGestureRecognizer alloc] initWithTarget:self.mapVeiw action:@selector(longPressed:)];
-//	[self.mapVeiw addGestureRecognizer:longPressGestureRecogniser];
 	self.mapVeiw.touchDelegate = self;
-
+	// Demo Mapview 
 	NSArray* arrLocationList = @[@"14.622485,120.961231",@"14.617739,120.970256",@"14.614685,120.991388",@"14.603539,120.96753",
 								 @"14.60056,120.985026",@"14.600252,120.985229",@"14.601628,120.982326",@"14.602294,120.982446",
 								 @"14.603556,120.99262",@"14.601836,120.992486",@"14.603207,120.99181",@"14.604185,120.993186",
